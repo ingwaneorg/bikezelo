@@ -10,7 +10,7 @@ app = Flask(__name__)
 
 CSV_PATH = "data/orders.csv"
 TICKER_ROWS = 50  # number of rows to show in the ticker
-
+ 
 
 def read_csv(retries=3):
     for attempt in range(retries):
@@ -25,6 +25,11 @@ def read_csv(retries=3):
             pass
         time.sleep(0.1)
     return pd.DataFrame(columns=["row_id", "timestamp", "customer_id", "order_amount", "status"])
+
+
+def validate_timestamps(df):
+    mask = pd.to_datetime(df["timestamp"], format="%Y-%m-%dT%H:%M:%S", errors="coerce").isna()
+    return df[mask]["row_id"].tolist()
 
 
 def run_validation(df):
@@ -123,6 +128,9 @@ def run_validation(df):
                     mask = ~df[col].isin(value_set)
                     failed_indices.update(df[mask]["row_id"].tolist())
 
+        # Add bad timestamps to failed indices
+        failed_indices.update(validate_timestamps(df))
+
         # Build result dict: row_id -> passed (True/False)
         results = {}
         for row_id in df["row_id"].dropna():
@@ -179,12 +187,17 @@ def get_rows():
     """
     from flask import request
     last_row_id = int(request.args.get("after", 0))
+    is_first_load = last_row_id == 0
 
     df = read_csv()
     if df.empty:
         return jsonify({"rows": [], "max_row_id": 0})
 
-    new_rows = df[df["row_id"] > last_row_id].tail(TICKER_ROWS)
+    # this is for first start up
+    new_rows = df[df["row_id"] > last_row_id]
+    limit = 10 if is_first_load else TICKER_ROWS
+    new_rows = new_rows.tail(limit)
+
     max_row_id = int(df["row_id"].max()) if not df.empty else 0
 
     rows = new_rows.to_dict(orient="records")
@@ -219,9 +232,12 @@ def get_validation():
     errors = total - passed
 
     # Warnings: bad timestamp rows (invalid but not a GE rule failure)
-    warnings = int(df["timestamp"].astype(str).str.match(r"^\d{4}-\d{2}-\d{2}").sum() == 0)
+    bad_timestamps = validate_timestamps(df)
+    warnings = len(bad_timestamps)
 
     forecast = calculate_forecast(df)
+    
+    error_rate = round((errors / total) * 100, 1) if total > 0 else 0.0
 
     return jsonify({
         "results": results,
@@ -230,6 +246,7 @@ def get_validation():
             "passed": passed,
             "warnings": warnings,
             "errors": errors,
+            "error_rate": error_rate,
         },
         "forecast": forecast,
     })
@@ -237,4 +254,5 @@ def get_validation():
 
 if __name__ == "__main__":
     app.run(host='0.0.0.0', port=5000, debug=True)
+
 

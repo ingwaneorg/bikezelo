@@ -1,4 +1,4 @@
-<!DOCTYPE html>
+<!DOCTYPE html>  
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -32,7 +32,7 @@
 
     #clock {
       font-size: 0.9em;
-      color: #888;
+      color: #ffffff;
     }
 
     .main {
@@ -83,7 +83,7 @@
       border-bottom: 1px solid #333;
       font-weight: normal;
       text-transform: uppercase;
-      font-size: 0.7em;
+      font-size: 0.9em;
       letter-spacing: 1px;
     }
 
@@ -127,7 +127,7 @@
 
     .stats-section h2 {
       font-size: 0.7em;
-      color: #555;
+      color: #ffffff;
       text-transform: uppercase;
       letter-spacing: 2px;
       margin-bottom: 12px;
@@ -141,7 +141,7 @@
       font-size: 0.85em;
     }
 
-    .stat-label { color: #888; }
+    .stat-label { color: #ffffff; }
 
     .stat-value {
       font-size: 1.4em;
@@ -161,7 +161,7 @@
 
     .validation-status {
       font-size: 0.7em;
-      color: #555;
+      color: #ffffff;
       margin-top: 8px;
     }
 
@@ -242,6 +242,10 @@
         <span class="stat-label">Errors</span>
         <span class="stat-value error" id="stat-errors">–</span>
       </div>
+      <div class="stat-row">
+        <span class="stat-label">Error rate</span>
+        <span class="stat-value error" id="stat-error-rate">–</span>
+      </div>
       <div class="validation-status" id="validation-status">Waiting for first validation...</div>
     </div>
 
@@ -301,6 +305,7 @@
             // Always update lastRowId
             if (data.max_row_id > lastRowId) {
                 lastRowId = data.max_row_id;
+                document.getElementById('last-row-label').textContent = `last row: ${lastRowId}`;
             }
             document.getElementById('footer-status').textContent =
                 `feed OK · ${new Date().toLocaleTimeString()}`;
@@ -342,6 +347,7 @@
 
     document.getElementById('ticker-count').textContent =
       `${tbody.rows.length} rows displayed`;
+
   }
 
   function getValidationLabel(rowId) {
@@ -379,6 +385,7 @@
         document.getElementById('stat-passed').textContent = s.passed;
         document.getElementById('stat-warnings').textContent = s.warnings;
         document.getElementById('stat-errors').textContent = s.errors;
+        document.getElementById('stat-error-rate').textContent = `${s.error_rate}%`;
 
         // Update forecast
         const f = data.forecast;
