@@ -16,26 +16,14 @@ def get_rules(suite):
     Available expectations:
     -----------------------------------------------------------------------
     # Not null check:
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
-    )
+    gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
 
     # Value range check:
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToBeBetween(
-            column="order_amount",
-            min_value=0,
-            max_value=999.99
-        )
-    )
+    gx.expectations.ExpectColumnValuesToBeBetween(
 
     # Valid values check:
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToBeInSet(
-            column="status",
-            value_set=["NEW", "PAID", "SHIPPED", "REFUNDED"]
-        )
-    )
+    gx.expectations.ExpectColumnValuesToBeInSet(
+
     -----------------------------------------------------------------------
     Add your FAIL rules below this line:
     """
@@ -43,21 +31,21 @@ def get_rules(suite):
     # Step 1 - Catch missing customer IDs
     #      a) uncomment the code below (3 lines)
     ##################################
-    # suite.add_expectation(
-    #     gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
-    # )
+    suite.add_expectation(
+        gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
+    )
 
     # Step 2 - Catch order amounts outside range
     #      a) uncomment the code below (7 lines)
     #      b) change the min & max values if you want to
     ##################################
-    # suite.add_expectation(
-    #     gx.expectations.ExpectColumnValuesToBeBetween(
-    #         column="order_amount",
-    #         min_value=0,
-    #         max_value=999.99
-    #     )
-    # )
+    suite.add_expectation(
+        gx.expectations.ExpectColumnValuesToBeBetween(
+            column="order_amount",
+            min_value=0,
+            max_value=999.99
+        )
+    )
 
     # Step 3 - Catch invalid status codes
     #      a) uncomment the code below (6 lines)
@@ -81,13 +69,6 @@ def get_warnings(suite):
     WARNING rules - rows that break these turn AMBER on the dashboard.
     A warning means the row is suspicious but not necessarily rejected.
 
-    # Timestamp format check:
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToMatchRegex(
-            column="timestamp",
-            regex=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"
-        )
-    )
     -----------------------------------------------------------------------
     Add your WARNING rules below this line:
     """

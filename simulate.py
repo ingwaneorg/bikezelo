@@ -74,7 +74,10 @@ def simulate():
 
     conn = sqlite3.connect(DB_PATH)
 
-    row_count = 0
+    # Start from current max row_id so terminal matches the dashboard
+    cursor = conn.execute("SELECT COALESCE(MAX(row_id), 0) FROM orders")
+    row_count = cursor.fetchone()[0]
+ 
     try:
         while True:
             # Roughly 1 in 8 rows is bad
@@ -87,7 +90,7 @@ def simulate():
 
             insert_row(conn, row)
             row_count += 1
-            print(f"[{row_count:>4}] {label}  {row[0]}  {str(row[1]):<12}  {str(row[2]):>8}  {row[3]}")
+            print(f"[{row_count:>4}] {label:<3}  {row[0]:<19}  {str(row[1]):<8}  {row[2]:>8.2f}  {row[3]}")
             time.sleep(INTERVAL)
 
     except KeyboardInterrupt:

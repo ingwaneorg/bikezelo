@@ -212,6 +212,10 @@ def get_rows():
     for row in rows:
         row["row_id"] = int(row["row_id"])
         row["status_class"] = "white"
+        # Replace NaN with None so it serialises as null in JSON
+        for key, value in row.items():
+            if pd.isna(value) if not isinstance(value, (list, dict)) else False:
+                row[key] = None
 
     return jsonify({"rows": rows, "max_row_id": max_row_id})
 
