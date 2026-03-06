@@ -1,4 +1,4 @@
-<!DOCTYPE html>  
+<!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
@@ -92,9 +92,10 @@
       transition: background 0.3s;
     }
 
-    tbody tr.white  { background: #ffffff; color: #000000; }
-    tbody tr.green  { background: #0a2a0a; color: #00ff88; }
-    tbody tr.red    { background: #2a0a0a; color: #ff4444; }
+    tbody tr.white { background: #ffffff; color: #000000; }
+    tbody tr.green { background: #0a2a0a; color: #00ff88; }
+    tbody tr.amber { background: #2a1a00; color: #ffaa00; }
+    tbody tr.red   { background: #2a0a0a; color: #ff4444; }
 
     tbody td {
       padding: 5px 12px;
@@ -108,9 +109,10 @@
       margin-right: 6px;
     }
 
-    tr.white  .status-dot { background: #555; }
-    tr.green  .status-dot { background: #00ff88; }
-    tr.red    .status-dot { background: #ff4444; }
+    tr.white .status-dot { background: #555; }
+    tr.green .status-dot { background: #00ff88; }
+    tr.amber .status-dot { background: #ffaa00; }
+    tr.red   .status-dot { background: #ff4444; }
 
     /* RIGHT - stats */
     .stats-panel {
@@ -200,7 +202,7 @@
     <div class="panel-header">
       <span>LIVE FEED</span>
       <span id="ticker-count">0 rows displayed</span>
-      <span id="last-row-label">last row: –</span>
+      <span id="last-row-label">last row: -</span>
     </div>
     <div class="ticker-table">
       <table>
@@ -209,13 +211,12 @@
             <th>#</th>
             <th>Timestamp</th>
             <th>Customer</th>
-            <th style="text-align:right">Amount</th>`
+            <th style="text-align:right">Amount</th>
             <th>Status</th>
             <th>Validation</th>
           </tr>
         </thead>
         <tbody id="ticker-body">
-          <!-- rows inserted here -->
         </tbody>
       </table>
     </div>
@@ -228,23 +229,23 @@
       <h2>Pipeline Stats</h2>
       <div class="stat-row">
         <span class="stat-label">Total rows</span>
-        <span class="stat-value total" id="stat-total">–</span>
+        <span class="stat-value total" id="stat-total">-</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Passed</span>
-        <span class="stat-value passed" id="stat-passed">–</span>
+        <span class="stat-value passed" id="stat-passed">-</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Warnings</span>
-        <span class="stat-value warning" id="stat-warnings">–</span>
+        <span class="stat-value warning" id="stat-warnings">-</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Errors</span>
-        <span class="stat-value error" id="stat-errors">–</span>
+        <span class="stat-value error" id="stat-errors">-</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Error rate</span>
-        <span class="stat-value error" id="stat-error-rate">–</span>
+        <span class="stat-value error" id="stat-error-rate">-</span>
       </div>
       <div class="validation-status" id="validation-status">Waiting for first validation...</div>
     </div>
@@ -253,15 +254,15 @@
       <h2>Forecast</h2>
       <div class="stat-row">
         <span class="stat-label">Rate</span>
-        <span class="forecast-value" id="forecast-rate">– / min</span>
+        <span class="forecast-value" id="forecast-rate">- / min</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Projected</span>
-        <span class="forecast-value" id="forecast-hour">– / hr</span>
+        <span class="forecast-value" id="forecast-hour">- / hr</span>
       </div>
       <div class="stat-row">
         <span class="stat-label">Errors / hr</span>
-        <span class="forecast-value" id="forecast-errors">–</span>
+        <span class="forecast-value" id="forecast-errors">-</span>
       </div>
     </div>
 
@@ -281,12 +282,12 @@
 </footer>
 
 <script>
-  // ─── State ────────────────────────────────────────────────────────────────
+  // --- State ----------------------------------------------------------------
   let lastRowId = 0;
-  let validationResults = {};  // row_id -> true/false
+  let validationResults = {};  // row_id -> "pass", "warn", "fail"
   const MAX_TICKER_ROWS = 50;
 
-  // ─── Clock ────────────────────────────────────────────────────────────────
+  // --- Clock ----------------------------------------------------------------
   function updateClock() {
     document.getElementById('clock').textContent =
       new Date().toLocaleTimeString();
@@ -294,40 +295,52 @@
   setInterval(updateClock, 1000);
   updateClock();
 
-  // ─── Fetch new rows (fast - every 3 seconds) ──────────────────────────────
-  function fetchNewRows() {
-    fetch(`/data/rows?after=${lastRowId}`)
-        .then(r => r.json())
-        .then(data => {
-            if (data.rows && data.rows.length > 0) {
-                appendRows(data.rows);
-            }
-            // Always update lastRowId
-            if (data.max_row_id > lastRowId) {
-                lastRowId = data.max_row_id;
-                document.getElementById('last-row-label').textContent = `last row: ${lastRowId}`;
-            }
-            document.getElementById('footer-status').textContent =
-                `feed OK · ${new Date().toLocaleTimeString()}`;
-        })
-        .catch(() => {
-            document.getElementById('footer-status').textContent = 'feed error';
-        });
+  // --- Row colour -----------------------------------------------------------
+  function rowClass(rowId) {
+    const state = validationResults[rowId];
+    if (state === "fail") return "red";
+    if (state === "warn") return "amber";
+    if (state === "pass") return "green";
+    return "white";
   }
 
-  // ─── Append rows to ticker ────────────────────────────────────────────────
+  function validationLabel(rowId) {
+    const state = validationResults[rowId];
+    if (state === "fail") return "FAIL";
+    if (state === "warn") return "WARN";
+    if (state === "pass") return "PASS";
+    return "pending";
+  }
+
+  // --- Fetch new rows (fast - every 3 seconds) ------------------------------
+  function fetchNewRows() {
+    fetch(`/data/rows?after=${lastRowId}`)
+      .then(r => r.json())
+      .then(data => {
+        if (data.rows && data.rows.length > 0) {
+          appendRows(data.rows);
+        }
+        if (data.max_row_id > lastRowId) {
+          lastRowId = data.max_row_id;
+          document.getElementById('last-row-label').textContent =
+            `last row: ${lastRowId}`;
+        }
+        document.getElementById('footer-status').textContent =
+          `feed OK · ${new Date().toLocaleTimeString()}`;
+      })
+      .catch(() => {
+        document.getElementById('footer-status').textContent = 'feed error';
+      });
+  }
+
+  // --- Append rows to ticker ------------------------------------------------
   function appendRows(rows) {
     const tbody = document.getElementById('ticker-body');
 
     rows.forEach(row => {
       const tr = document.createElement('tr');
       tr.id = `row-${row.row_id}`;
-      tr.className = 'white pulse';
-
-      // Apply validation result if we already have it
-      if (validationResults.hasOwnProperty(row.row_id)) {
-        tr.className = validationResults[row.row_id] ? 'green' : 'red';
-      }
+      tr.className = rowClass(row.row_id) + ' pulse';
 
       tr.innerHTML = `
         <td>${row.row_id}</td>
@@ -335,35 +348,27 @@
         <td>${row.customer_id || '<em>null</em>'}</td>
         <td style="text-align:right">${parseFloat(row.order_amount).toFixed(2)}</td>
         <td>${row.status}</td>
-        <td><span class="status-dot"></span>${getValidationLabel(row.row_id)}</td>
+        <td><span class="status-dot"></span>${validationLabel(row.row_id)}</td>
       `;
       tbody.insertBefore(tr, tbody.firstChild);
     });
 
-    // Trim ticker to MAX_TICKER_ROWS
     while (tbody.rows.length > MAX_TICKER_ROWS) {
       tbody.deleteRow(tbody.rows.length - 1);
     }
 
     document.getElementById('ticker-count').textContent =
       `${tbody.rows.length} rows displayed`;
-
   }
 
-  function getValidationLabel(rowId) {
-    if (!validationResults.hasOwnProperty(rowId)) return 'pending';
-    return validationResults[rowId] ? 'PASS' : 'FAIL';
-  }
-
-  // ─── Run validation (slow - every 10 seconds) ─────────────────────────────
+  // --- Run validation (slow - every 10 seconds) ----------------------------
   function runValidation() {
     fetch('/data/validate')
       .then(r => r.json())
       .then(data => {
-        // Store results
         validationResults = {};
-        for (const [rowId, passed] of Object.entries(data.results)) {
-          validationResults[parseInt(rowId)] = passed;
+        for (const [rowId, state] of Object.entries(data.results)) {
+          validationResults[parseInt(rowId)] = state;
         }
 
         // Re-colour all visible ticker rows
@@ -371,20 +376,21 @@
         Array.from(tbody.rows).forEach(tr => {
           const rowId = parseInt(tr.id.replace('row-', ''));
           if (validationResults.hasOwnProperty(rowId)) {
-            tr.className = validationResults[rowId] ? 'green' : 'red';
+            tr.className = rowClass(rowId);
             const label = tr.querySelector('td:last-child');
             if (label) {
-              label.innerHTML = `<span class="status-dot"></span>${validationResults[rowId] ? 'PASS' : 'FAIL'}`;
+              label.innerHTML =
+                `<span class="status-dot"></span>${validationLabel(rowId)}`;
             }
           }
         });
 
         // Update stats
         const s = data.stats;
-        document.getElementById('stat-total').textContent = s.total;
-        document.getElementById('stat-passed').textContent = s.passed;
+        document.getElementById('stat-total').textContent    = s.total;
+        document.getElementById('stat-passed').textContent   = s.passed;
         document.getElementById('stat-warnings').textContent = s.warnings;
-        document.getElementById('stat-errors').textContent = s.errors;
+        document.getElementById('stat-errors').textContent   = s.errors;
         document.getElementById('stat-error-rate').textContent = `${s.error_rate}%`;
 
         // Update forecast
@@ -394,24 +400,19 @@
         document.getElementById('forecast-hour').textContent =
           `${f.forecast_per_hour} / hr`;
 
-        // Forecast errors per hour
         const errorRate = s.total > 0
           ? (s.errors / s.total) * f.forecast_per_hour
           : 0;
         document.getElementById('forecast-errors').textContent =
           `~${Math.round(errorRate)} / hr`;
 
-        // Validation timestamp
         document.getElementById('validation-status').textContent =
           `Last validated: ${new Date().toLocaleTimeString()}`;
 
-        // Rules active indicator
-        const hasErrors = s.errors > 0 || s.passed > 0;
         document.getElementById('rules-status').textContent =
-          s.total === s.passed && s.errors === 0
-            ? 'No rules active (all white/green)'
-            : `Rules catching ${s.errors} error(s)`;
-
+          s.errors === 0 && s.warnings === 0
+            ? 'No rules active'
+            : `Catching ${s.errors} error(s), ${s.warnings} warning(s)`;
       })
       .catch(() => {
         document.getElementById('validation-status').textContent =
@@ -419,7 +420,7 @@
       });
   }
 
-  // ─── Start polling ─────────────────────────────────────────────────────────
+  // --- Start polling --------------------------------------------------------
   document.addEventListener('DOMContentLoaded', function () {
     fetchNewRows();
     runValidation();
@@ -430,4 +431,3 @@
 
 </body>
 </html>
-
