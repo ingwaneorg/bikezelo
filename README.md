@@ -14,6 +14,9 @@ cd bikezelo
 pip install -r requirements.txt
 ```
 
+Activate a virtual enviroment
+
+
 Initialise the database:
 
 ```bash
@@ -99,18 +102,18 @@ This cycles through 22 hand-crafted rows covering nulls, boundary values, bad st
 
 ```
 bikezelo/
-├── app.py              # Flask app - serves the dashboard and runs validation
-├── rules.py            # Great Expectations rules - edit this
-├── simulate.py         # Writes a live stream of orders to the database
-├── test_simulate.py    # Writes predictable edge-case rows for testing rules
-├── setup_db.py         # One-time database setup
+├── app.py                # Flask app - serves the dashboard and runs validation
+├── rules.py              # Great Expectations rules - edit this
+├── simulate.py           # Writes a live stream of orders to the database
+├── setup_db.py           # One-time database setup
 ├── requirements.txt
 ├── bin/
-│   └── select.sh       # Query the database from the terminal
+│   └── select.sh         # Query the database from the terminal
 ├── data/
-│   └── orders.db       # SQLite database (created by setup_db.py)
+│   └── orders.db         # SQLite database (created by setup_db.py)
 ├── tests/
-│   └── test_app.py     # Unit tests
+│   ├── test_app.py       # Unit tests
+│   └── test_simulate.py  # Writes predictable edge-case rows for testing rules
 └── templates/
-    └── index.html      # Dashboard
+    └── index.html        # Dashboard
 ```
