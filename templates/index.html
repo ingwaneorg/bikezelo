@@ -177,6 +177,17 @@
       100% { opacity: 1; }
     }
 
+    #incident-banner {
+      display: none;
+      background: #ff4444;
+      color: #fff;
+      padding: 8px 20px;
+      font-size: 0.85em;
+      text-align: center;
+      letter-spacing: 1px;
+      animation: pulse 1s ease-in-out infinite;
+    }
+
     footer {
       background: #111;
       border-top: 1px solid #333;
@@ -194,6 +205,10 @@
   <h1>⚡ BIKEZELO ~ TechMart Pipeline Monitor</h1>
   <span id="clock">--:--:--</span>
 </header>
+
+<div id="incident-banner">
+  !! INCIDENT DETECTED — error rate above <span id="incident-threshold"></span> · started <span id="incident-time"></span>
+</div>
 
 <div class="main">
 
@@ -245,7 +260,14 @@
       </div>
       <div class="stat-row">
         <span class="stat-label">Error rate</span>
-        <span class="stat-value error" id="stat-error-rate">-</span>
+        <span style="display:flex; align-items:center; gap:6px">
+          <span class="stat-value error" id="stat-error-rate">-</span>
+          <span id="trend-arrow" style="font-size:1.1em; color:#e0e0e0">→</span>
+        </span>
+      </div>
+      <div class="stat-row">
+        <span class="stat-label" id="sla-label">SLA</span>
+        <span class="stat-value" id="sla-status">-</span>
       </div>
       <div class="validation-status" id="validation-status">Waiting for first validation...</div>
     </div>
@@ -286,6 +308,15 @@
   let lastRowId = 0;
   let validationResults = {};  // row_id -> "pass", "warn", "fail"
   const MAX_TICKER_ROWS = 50;
+
+  // --- Monitoring thresholds (adjust to match your pipeline) ---------------
+  const SLA_TARGET = 5;          // % — error rate above this is an SLA breach
+  document.getElementById('sla-label').textContent = `SLA (<${SLA_TARGET}%)`;
+  const INCIDENT_THRESHOLD = 15; // % — error rate above this triggers an incident alert
+  document.getElementById('incident-threshold').textContent = `${INCIDENT_THRESHOLD}%`;
+
+  let prevErrorRate = null;
+  let incidentStartTime = null;
 
   // --- Clock ----------------------------------------------------------------
   function updateClock() {
@@ -392,6 +423,45 @@
         document.getElementById('stat-warnings').textContent = s.warnings;
         document.getElementById('stat-errors').textContent   = s.errors;
         document.getElementById('stat-error-rate').textContent = `${s.error_rate}%`;
+
+        // Trend arrow — compare current error rate to previous validation
+        const trendEl = document.getElementById('trend-arrow');
+        if (prevErrorRate !== null) {
+          if (s.error_rate > prevErrorRate + 1) {
+            trendEl.textContent = '↑'; trendEl.style.color = '#ff4444';
+          } else if (s.error_rate < prevErrorRate - 1) {
+            trendEl.textContent = '↓'; trendEl.style.color = '#00ff88';
+          } else {
+            trendEl.textContent = '→'; trendEl.style.color = '#e0e0e0';
+          }
+        }
+        prevErrorRate = s.error_rate;
+
+        // SLA indicator
+        const slaEl = document.getElementById('sla-status');
+        if (s.total === 0) {
+          slaEl.textContent = '-';
+          slaEl.style.color = '#e0e0e0';
+        } else if (s.error_rate <= SLA_TARGET) {
+          slaEl.textContent = 'OK';
+          slaEl.style.color = '#00ff88';
+        } else {
+          slaEl.textContent = 'BREACH';
+          slaEl.style.color = '#ff4444';
+        }
+
+        // Incident banner
+        const banner = document.getElementById('incident-banner');
+        if (s.error_rate >= INCIDENT_THRESHOLD) {
+          if (!incidentStartTime) {
+            incidentStartTime = new Date().toLocaleTimeString();
+            document.getElementById('incident-time').textContent = incidentStartTime;
+          }
+          banner.style.display = 'block';
+        } else {
+          incidentStartTime = null;
+          banner.style.display = 'none';
+        }
 
         // Update forecast
         const f = data.forecast;

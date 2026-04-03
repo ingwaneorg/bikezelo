@@ -5,6 +5,7 @@ import sqlite3
 import os
 import importlib
 import logging
+import math
 import sys
 
 logging.basicConfig(
@@ -190,12 +191,15 @@ def get_rows():
 
     max_row_id = int(df["row_id"].max())
 
-    # Replace NaN with None so it serialises as null in JSON
-    clean_rows = new_rows.where(pd.notnull(new_rows), other=None)
-    rows = clean_rows.to_dict(orient="records")
+    rows = new_rows.to_dict(orient="records")
     for row in rows:
         row["row_id"] = int(row["row_id"])
         row["status_class"] = "white"
+        # Replace NaN with None so it serialises as null in JSON.
+        # Check float explicitly — pd.isna() raises on non-scalar types.
+        for key, val in row.items():
+            if isinstance(val, float) and math.isnan(val):
+                row[key] = None
 
     return jsonify({"rows": rows, "max_row_id": max_row_id})
 
