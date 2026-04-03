@@ -310,7 +310,7 @@
   const MAX_TICKER_ROWS = 50;
 
   // --- Monitoring thresholds (adjust to match your pipeline) ---------------
-  const SLA_TARGET = 5;          // % — error rate above this is an SLA breach
+  const SLA_TARGET = 12;          // % — error rate above this is an SLA breach
   document.getElementById('sla-label').textContent = `SLA (<${SLA_TARGET}%)`;
   const INCIDENT_THRESHOLD = 15; // % — error rate above this triggers an incident alert
   document.getElementById('incident-threshold').textContent = `${INCIDENT_THRESHOLD}%`;

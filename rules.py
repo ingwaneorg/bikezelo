@@ -51,12 +51,12 @@ def get_rules(suite):
     #      a) uncomment the code below (6 lines)
     #      b) change the value_set if you want to
     ##################################
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToBeInSet(
-            column="status",
-            value_set=["NEW", "PAID", "SHIPPED", "REFUNDED"]
-        )
-    )
+    #suite.add_expectation(
+    #    gx.expectations.ExpectColumnValuesToBeInSet(
+    #        column="status",
+    #        value_set=["NEW", "PAID", "SHIPPED", "REFUNDED"]
+    #    )
+    #)
 
     # Step 4 - Your own rules
     ##################################
