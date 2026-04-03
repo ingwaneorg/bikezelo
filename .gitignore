@@ -1,7 +1,7 @@
 # This project
 *.db
 *.csv
-data/orders.db
+data/orders.db*
 data/orders.csv
 
 # Byte-compiled / optimized / DLL files
