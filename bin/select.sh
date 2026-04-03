@@ -1,17 +1,17 @@
 #!/bin/bash
 
-directory="data"
-database="orders.db"
+SCRIPT_DIR=$(cd "$(dirname "$0")/.." && pwd)
+database="${SCRIPT_DIR}/data/orders.db"
 
-if [ ! -f "${directory}/${database}" ]; then
-  echo "ERROR: Database not found - ${directory}/${database}"
+if [ ! -f "${database}" ]; then
+  echo "ERROR: Database not found - ${database}"
   exit 1
 fi
 
 echo "========================================================================"
 
-sqlite3 ${directory}/${database} <<EOF
-SELECT row_id, 
+sqlite3 "${database}" <<EOF
+SELECT row_id,
        timestamp,
        customer_id,
        order_amount,
