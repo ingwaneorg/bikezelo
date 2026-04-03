@@ -51,12 +51,12 @@ def get_rules(suite):
     #      a) uncomment the code below (6 lines)
     #      b) change the value_set if you want to
     ##################################
-    # suite.add_expectation(
-    #     gx.expectations.ExpectColumnValuesToBeInSet(
-    #         column="status",
-    #         value_set=["NEW", "PAID", "SHIPPED", "REFUNDED"]
-    #     )
-    # )
+    suite.add_expectation(
+        gx.expectations.ExpectColumnValuesToBeInSet(
+            column="status",
+            value_set=["NEW", "PAID", "SHIPPED", "REFUNDED"]
+        )
+    )
 
     # Step 4 - Your own rules
     ##################################
@@ -76,12 +76,12 @@ def get_warnings(suite):
     # Step 5 - Catch malformed timestamps (warning, not a hard failure)
     #      a) uncomment the code below (5 lines)
     ##################################
-    # suite.add_expectation(
-    #     gx.expectations.ExpectColumnValuesToMatchRegex(
-    #         column="timestamp",
-    #         regex=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"
-    #     )
-    # )
+    suite.add_expectation(
+        gx.expectations.ExpectColumnValuesToMatchRegex(
+            column="timestamp",
+            regex=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"
+        )
+    )
 
     # Step 6 - Your own warnings
     ##################################

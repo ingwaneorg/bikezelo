@@ -406,13 +406,19 @@
         document.getElementById('forecast-errors').textContent =
           `~${Math.round(errorRate)} / hr`;
 
-        document.getElementById('validation-status').textContent =
-          `Last validated: ${new Date().toLocaleTimeString()}`;
+        const validationStatusEl = document.getElementById('validation-status');
+        if (data.rules_error) {
+          validationStatusEl.textContent = `Rules error: ${data.rules_error}`;
+          validationStatusEl.style.color = '#ff4444';
+        } else {
+          validationStatusEl.textContent = `Last validated: ${new Date().toLocaleTimeString()}`;
+          validationStatusEl.style.color = '';
+        }
 
-        document.getElementById('rules-status').textContent =
+        document.getElementById('rules-status').innerHTML =
           s.errors === 0 && s.warnings === 0
             ? 'No rules active'
-            : `Catching ${s.errors} error(s), ${s.warnings} warning(s)`;
+            : `Catching:<br><br>* ${s.errors} error(s)<br>* ${s.warnings} warning(s)`;
       })
       .catch(() => {
         document.getElementById('validation-status').textContent =

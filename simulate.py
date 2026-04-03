@@ -9,7 +9,9 @@ DB_PATH = os.path.join(BASE_DIR, "data", "orders.db")
 
 STATUSES = ["NEW", "PAID", "SHIPPED", "REFUNDED"]
 BAD_STATUSES = ["PENDING", "CANCELLED", "UNKNOWN"]
-INTERVAL = 2  # seconds between rows
+INTERVAL = 2          # seconds between rows
+SPIKE_CHANCE = 0.02   # probability of an incident spike starting each cycle
+SPIKE_LENGTH = (4, 8) # min/max bad rows in a spike
 
 
 def random_customer_id():
@@ -77,11 +79,22 @@ def simulate():
     # Start from current max row_id so terminal matches the dashboard
     cursor = conn.execute("SELECT COALESCE(MAX(row_id), 0) FROM orders")
     row_count = cursor.fetchone()[0]
- 
+
+    spike_remaining = 0
+
     try:
         while True:
-            # Roughly 1 in 8 rows is bad
-            if random.random() < 0.125:
+            # Incident spike: a burst of bad rows to simulate a real outage
+            if spike_remaining == 0 and random.random() < SPIKE_CHANCE:
+                spike_remaining = random.randint(*SPIKE_LENGTH)
+                print(f"\n!! Incident spike started — next {spike_remaining} rows will be bad\n")
+
+            if spike_remaining > 0:
+                row = make_bad_row()
+                label = "BAD"
+                spike_remaining -= 1
+            elif random.random() < 0.125:
+                # Roughly 1 in 8 rows is bad outside of a spike
                 row = make_bad_row()
                 label = "BAD"
             else:

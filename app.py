@@ -4,7 +4,14 @@ import great_expectations as gx
 import sqlite3
 import os
 import importlib
+import logging
 import sys
+
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s %(levelname)s %(name)s: %(message)s",
+)
+logger = logging.getLogger("bikezelo")
 
 app = Flask(__name__)
 
@@ -28,11 +35,11 @@ def read_db():
         conn.close()
         return df
     except Exception as e:
-        print(f"DB read error: {e}")
+        logger.error("DB read error: %s", e)
         return pd.DataFrame(columns=["row_id", "timestamp", "customer_id", "order_amount", "status"])
 
 
-def _run_suite(context, df, suite, suite_name, definition_name):
+def _run_suite(context, df, batch_definition, suite, definition_name):
     """
     Run a single GE suite against df.
     Returns a set of row_ids that failed.
@@ -41,26 +48,6 @@ def _run_suite(context, df, suite, suite_name, definition_name):
 
     if len(suite.expectations) == 0:
         return failed_indices
-
-    try:
-        context.validation_definitions.delete(definition_name)
-    except Exception:
-        pass
-
-    try:
-        data_source = context.data_sources.add_pandas(name="bikezelo")
-    except Exception:
-        data_source = context.data_sources["bikezelo"]
-
-    try:
-        data_asset = data_source.add_dataframe_asset(name="orders")
-    except Exception:
-        data_asset = data_source.assets["orders"]
-
-    try:
-        batch_definition = data_asset.add_batch_definition_whole_dataframe("orders_batch")
-    except Exception:
-        batch_definition = data_asset.batch_definitions["orders_batch"]
 
     validation_definition = context.validation_definitions.add(
         gx.ValidationDefinition(
@@ -120,29 +107,24 @@ def run_validation(df):
 
         import rules as rules_module
 
-        context = gx.get_context()
+        # Fresh ephemeral context each run — no "already exists" issues
+        context = gx.get_context(mode="ephemeral")
 
-        # Build fail suite
-        fail_suite_name = "bikezelo_fail_suite"
-        try:
-            context.suites.delete(fail_suite_name)
-        except Exception:
-            pass
-        fail_suite = context.suites.add(gx.ExpectationSuite(name=fail_suite_name))
+        # Set up data source once, shared by both suites
+        data_source = context.data_sources.add_pandas(name="bikezelo")
+        data_asset = data_source.add_dataframe_asset(name="orders")
+        batch_definition = data_asset.add_batch_definition_whole_dataframe("orders_batch")
+
+        # Build and run fail suite
+        fail_suite = context.suites.add(gx.ExpectationSuite(name="bikezelo_fail_suite"))
         fail_suite = rules_module.get_rules(fail_suite)
 
-        # Build warn suite
-        warn_suite_name = "bikezelo_warn_suite"
-        try:
-            context.suites.delete(warn_suite_name)
-        except Exception:
-            pass
-        warn_suite = context.suites.add(gx.ExpectationSuite(name=warn_suite_name))
+        # Build and run warn suite
+        warn_suite = context.suites.add(gx.ExpectationSuite(name="bikezelo_warn_suite"))
         warn_suite = rules_module.get_warnings(warn_suite)
 
-        # Run both suites
-        failed_ids = _run_suite(context, df, fail_suite, fail_suite_name, "bikezelo_fail_validation")
-        warned_ids = _run_suite(context, df, warn_suite, warn_suite_name, "bikezelo_warn_validation")
+        failed_ids = _run_suite(context, df, batch_definition, fail_suite, "bikezelo_fail_validation")
+        warned_ids = _run_suite(context, df, batch_definition, warn_suite, "bikezelo_warn_validation")
 
         # Build result dict - fail takes priority over warn
         results = {}
@@ -155,11 +137,11 @@ def run_validation(df):
             else:
                 results[rid] = "pass"
 
-        return results
+        return results, None
 
     except Exception as e:
-        print(f"Validation error: {e}")
-        return {int(row_id): "pass" for row_id in df["row_id"].dropna()}
+        logger.error("Validation error: %s", e)
+        return {int(row_id): "pass" for row_id in df["row_id"].dropna()}, str(e)
 
 
 def calculate_forecast(df):
@@ -208,14 +190,12 @@ def get_rows():
 
     max_row_id = int(df["row_id"].max())
 
-    rows = new_rows.to_dict(orient="records")
+    # Replace NaN with None so it serialises as null in JSON
+    clean_rows = new_rows.where(pd.notnull(new_rows), other=None)
+    rows = clean_rows.to_dict(orient="records")
     for row in rows:
         row["row_id"] = int(row["row_id"])
         row["status_class"] = "white"
-        # Replace NaN with None so it serialises as null in JSON
-        for key, value in row.items():
-            if pd.isna(value) if not isinstance(value, (list, dict)) else False:
-                row[key] = None
 
     return jsonify({"rows": rows, "max_row_id": max_row_id})
 
@@ -235,7 +215,7 @@ def get_validation():
             "forecast": {"rows_per_min": 0, "forecast_per_hour": 0},
         })
 
-    results = run_validation(df)
+    results, rules_error = run_validation(df)
 
     total = len(results)
     passed = sum(1 for v in results.values() if v == "pass")
@@ -255,6 +235,7 @@ def get_validation():
             "error_rate": error_rate,
         },
         "forecast": forecast,
+        "rules_error": rules_error,
     })
 
 
