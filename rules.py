@@ -30,27 +30,27 @@ def get_rules(suite):
 
     # Step 1 - Catch missing customer IDs
     #      a) uncomment the code below (3 lines)
-    ##################################
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
-    )
+    #~~~~~~~~~~~~~~~~~~~~~~~>>>
+    #suite.add_expectation(
+    #    gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
+    #)
 
     # Step 2 - Catch order amounts outside range
     #      a) uncomment the code below (7 lines)
     #      b) change the min & max values if you want to
-    ##################################
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToBeBetween(
-            column="order_amount",
-            min_value=0,
-            max_value=999.99
-        )
-    )
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
+    #suite.add_expectation(
+    #    gx.expectations.ExpectColumnValuesToBeBetween(
+    #        column="order_amount",
+    #        min_value=0,
+    #        max_value=999.99
+    #    )
+    #)
 
     # Step 3 - Catch invalid status codes
     #      a) uncomment the code below (6 lines)
     #      b) change the value_set if you want to
-    ##################################
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
     #suite.add_expectation(
     #    gx.expectations.ExpectColumnValuesToBeInSet(
     #        column="status",
@@ -59,7 +59,7 @@ def get_rules(suite):
     #)
 
     # Step 4 - Your own rules
-    ##################################
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
 
     return suite
 
@@ -75,15 +75,15 @@ def get_warnings(suite):
 
     # Step 5 - Catch malformed timestamps (warning, not a hard failure)
     #      a) uncomment the code below (5 lines)
-    ##################################
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToMatchRegex(
-            column="timestamp",
-            regex=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"
-        )
-    )
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
+    #suite.add_expectation(
+    #    gx.expectations.ExpectColumnValuesToMatchRegex(
+    #        column="timestamp",
+    #        regex=r"^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}$"
+    #    )
+    #)
 
     # Step 6 - Your own warnings
-    ##################################
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
 
     return suite
