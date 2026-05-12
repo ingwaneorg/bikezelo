@@ -88,6 +88,19 @@ def _run_suite(context, df, batch_definition, suite, definition_name):
                 mask = ~df[col].astype(str).str.match(regex, na=False)
                 failed_indices.update(df[mask]["row_id"].tolist())
 
+            elif exp_type == "expect_column_values_to_be_unique":
+                mask = df[col].duplicated(keep=False) & df[col].notna()
+                failed_indices.update(df[mask]["row_id"].tolist())
+
+            elif exp_type == "expect_column_value_lengths_to_be_between":
+                min_val = exp_result.expectation_config.kwargs.get("min_value")
+                max_val = exp_result.expectation_config.kwargs.get("max_value")
+                lengths = df[col].fillna("").astype(str).str.len()
+                if min_val is not None:
+                    failed_indices.update(df[lengths < min_val]["row_id"].tolist())
+                if max_val is not None:
+                    failed_indices.update(df[lengths > max_val]["row_id"].tolist())
+
     return failed_indices
 
 

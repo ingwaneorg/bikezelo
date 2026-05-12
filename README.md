@@ -84,6 +84,17 @@ def get_warnings(suite):
     return suite
 ```
 
+**Available expectations:**
+
+| Expectation | What it checks |
+|---|---|
+| `ExpectColumnValuesToNotBeNull` | column must have a value |
+| `ExpectColumnValuesToBeBetween` | numeric value within a min/max range |
+| `ExpectColumnValuesToBeInSet` | value must be one of a fixed list |
+| `ExpectColumnValuesToMatchRegex` | value must match a pattern |
+| `ExpectColumnValueLengthsToBeBetween` | string length within a min/max range |
+| `ExpectColumnValuesToBeUnique` | no duplicate values in the column |
+
 ---
 
 ## Testing rules
@@ -91,7 +102,7 @@ def get_warnings(suite):
 To generate a predictable set of edge-case rows instead of random data, use:
 
 ```bash
-python test_simulate.py
+python tests/test_simulate.py
 ```
 
 This cycles through 22 hand-crafted rows covering nulls, boundary values, bad statuses, and malformed timestamps — useful when you want to verify that a new rule catches exactly what you expect.

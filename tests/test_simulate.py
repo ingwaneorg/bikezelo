@@ -2,7 +2,7 @@ import sqlite3
 import os
 import time
 
-BASE_DIR = os.path.dirname(os.path.abspath(__file__))
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 DB_PATH = os.path.join(BASE_DIR, "data", "orders.db")
 
 INTERVAL = 1.0  # faster than simulate.py so rows cycle quickly

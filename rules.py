@@ -24,18 +24,26 @@ def get_rules(suite):
     # Valid values check:
     gx.expectations.ExpectColumnValuesToBeInSet(
 
+    # String length check:
+    gx.expectations.ExpectColumnValueLengthsToBeBetween(
+
+    # Uniqueness check:
+    gx.expectations.ExpectColumnValuesToBeUnique(
+
     -----------------------------------------------------------------------
     Add your FAIL rules below this line:
     """
 
-    # Step 1 - Catch missing customer IDs
+    # Step 1 - Every order must have a customer ID.
+    #           Without one, the order can't be linked to an account — it's unusable.
     #      a) uncomment the code below (3 lines)
     #~~~~~~~~~~~~~~~~~~~~~~~>>>
     #suite.add_expectation(
     #    gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
     #)
 
-    # Step 2 - Catch order amounts outside range
+    # Step 2 - Order amounts must be realistic.
+    #           Negative values mean the data is corrupted; very high values are likely entry errors.
     #      a) uncomment the code below (7 lines)
     #      b) change the min & max values if you want to
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
@@ -47,7 +55,8 @@ def get_rules(suite):
     #    )
     #)
 
-    # Step 3 - Catch invalid status codes
+    # Step 3 - Status must be one of the recognised codes.
+    #           Anything else means the pipeline received a value it doesn't know how to process.
     #      a) uncomment the code below (6 lines)
     #      b) change the value_set if you want to
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
@@ -58,7 +67,21 @@ def get_rules(suite):
     #    )
     #)
 
-    # Step 4 - Your own rules
+    # Step 4 - Customer IDs must not be suspiciously long.
+    #           A valid ID like CUST1234 is 8 characters. Anything much longer
+    #           suggests corrupted or injected data.
+    #      a) uncomment the code below (6 lines)
+    #      b) adjust max_value if your IDs use a different format
+    #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
+    #suite.add_expectation(
+    #    gx.expectations.ExpectColumnValueLengthsToBeBetween(
+    #        column="customer_id",
+    #        min_value=4,
+    #        max_value=12
+    #    )
+    #)
+
+    # Step 5 - Your own rules
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
 
     return suite
@@ -73,7 +96,10 @@ def get_warnings(suite):
     Add your WARNING rules below this line:
     """
 
-    # Step 5 - Catch malformed timestamps (warning, not a hard failure)
+    # Step 6 - Timestamps must be in the expected format.
+    #           A malformed timestamp won't break the pipeline immediately, but it will
+    #           cause problems downstream when anything tries to sort or filter by time.
+    #           This is a warning rather than a hard failure — suspicious, but not rejected.
     #      a) uncomment the code below (5 lines)
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
     #suite.add_expectation(
@@ -83,7 +109,7 @@ def get_warnings(suite):
     #    )
     #)
 
-    # Step 6 - Your own warnings
+    # Step 7 - Your own warnings
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
 
     return suite
