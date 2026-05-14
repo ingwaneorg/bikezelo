@@ -1,6 +1,6 @@
 # bikezelo ~ TechMart Pipeline Monitor
 
-![Teaching](https://img.shields.io/badge/module-DE5M5-blue)
+![Teaching](https://img.shields.io/badge/module-DE5M6-blue)
 ![Python Version](https://img.shields.io/badge/python-3.9--3.12-blue.svg)
 
 ![Open Issues](https://img.shields.io/github/issues/ingwaneorg/bikezelo)
