@@ -131,7 +131,7 @@ def run_validation(df):
 
         # Build and run fail suite
         fail_suite = context.suites.add(gx.ExpectationSuite(name="bikezelo_fail_suite"))
-        fail_suite = rules_module.get_rules(fail_suite)
+        fail_suite = rules_module.get_failures(fail_suite)
 
         # Build and run warn suite
         warn_suite = context.suites.add(gx.ExpectationSuite(name="bikezelo_warn_suite"))

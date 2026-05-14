@@ -9,7 +9,7 @@ Timestamp format: 2026-03-05T23:54:31
 import great_expectations as gx
 
 
-def get_rules(suite):
+def get_failures(suite):
     """
     FAIL rules - rows that break these turn RED on the dashboard.
 
