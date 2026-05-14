@@ -14,18 +14,22 @@ A lightweight pipeline monitoring dashboard that simulates a live data feed, val
 
 ## Setup
 
-Clone the repo and install dependencies:
+### Step 1: Clone the repo
 
 ```bash
 git clone https://github.com/ingwaneorg/bikezelo.git
 cd bikezelo
+```
+
+### Step 2: Install dependencies:
+
+*Optional: Create and activate a virtual environment ~ we will skip this part
+
+```bash
 pip install -r requirements.txt
 ```
 
-Activate a virtual enviroment
-
-
-Initialise the database:
+### Step 3: Initialise the database:
 
 ```bash
 python setup_db.py
@@ -47,7 +51,7 @@ python simulate.py
 python app.py
 ```
 
-Then open a browser and go to `http://localhost:5000`.
+Then open a browser and go to: [http://localhost:5000](http://localhost:5000)
 
 ---
 
@@ -94,14 +98,14 @@ def get_warnings(suite):
 
 **Available expectations:**
 
-| Expectation | What it checks |
-|---|---|
-| `ExpectColumnValuesToNotBeNull` | column must have a value |
-| `ExpectColumnValuesToBeBetween` | numeric value within a min/max range |
-| `ExpectColumnValuesToBeInSet` | value must be one of a fixed list |
-| `ExpectColumnValuesToMatchRegex` | value must match a pattern |
-| `ExpectColumnValueLengthsToBeBetween` | string length within a min/max range |
-| `ExpectColumnValuesToBeUnique` | no duplicate values in the column |
+| Expectation                          | What it checks                      |
+|--------------------------------------|-------------------------------------|
+| `ExpectColumnValuesToNotBeNull`      | column must have a value            |
+| `ExpectColumnValuesToBeBetween`      | numeric value within a min/max range|
+| `ExpectColumnValuesToBeInSet`        | value must be one of a fixed list   |
+| `ExpectColumnValuesToMatchRegex`     | value must match a pattern          |
+| `ExpectColumnValueLengthsToBeBetween`| string length within a min/max range|
+| `ExpectColumnValuesToBeUnique`       | no duplicate values in the column   |
 
 ---
 
@@ -148,3 +152,4 @@ bikezelo/
 └── templates/
     └── index.html        # Dashboard
 ```
+
