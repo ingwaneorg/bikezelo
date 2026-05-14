@@ -1,5 +1,12 @@
 # bikezelo ~ TechMart Pipeline Monitor
 
+![Teaching](https://img.shields.io/badge/module-DE5M5-blue)
+![Python Version](https://img.shields.io/badge/python-3.9--3.12-blue.svg)
+
+![Open Issues](https://img.shields.io/github/issues/ingwaneorg/bikezelo)
+![Open PRs](https://img.shields.io/github/issues-pr/ingwaneorg/bikezelo)
+![Last Commit](https://img.shields.io/github/last-commit/ingwaneorg/bikezelo)
+
 A lightweight pipeline monitoring dashboard that simulates a live data feed, validates incoming records against quality rules, and forecasts pipeline behaviour.
 
 ---
@@ -65,7 +72,7 @@ Open `rules.py`. It has numbered steps — uncomment the examples or add your ow
 
 **FAIL rules** — rows that break these turn red:
 ```python
-def get_rules(suite):
+def get_failures(suite):
     suite.add_expectation(
         gx.expectations.ExpectColumnValuesToNotBeNull(column="customer_id")
     )
@@ -99,13 +106,25 @@ def get_warnings(suite):
 
 ## Testing rules
 
-To generate a predictable set of edge-case rows instead of random data, use:
+**Testing your rules with predictable data**
+
+To generate a predictable set of edge-case rows instead of random data, run this in place of `simulate.py`:
 
 ```bash
 python tests/test_simulate.py
 ```
 
-This cycles through 22 hand-crafted rows covering nulls, boundary values, bad statuses, and malformed timestamps — useful when you want to verify that a new rule catches exactly what you expect.
+This cycles through 25 hand-crafted rows covering nulls, boundary values, bad statuses, and malformed timestamps — useful when you want to verify that a new rule catches exactly the rows you expect.
+
+**Unit tests**
+
+To run the project's unit tests:
+
+```bash
+venv/bin/pytest tests/
+```
+
+These test the Flask endpoints and forecast logic in `app.py`. They finish in a few seconds and do not require the simulator or app to be running.
 
 ---
 
