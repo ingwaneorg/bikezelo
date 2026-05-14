@@ -71,7 +71,7 @@ def insert_row(conn, row):
     conn.commit()
 
 
-def test_simulate():
+def run():
     print(f"Test simulator started - writing to {DB_PATH}")
     print(f"{len(TEST_ROWS)} test rows in rotation")
     print("Press Ctrl+C to stop.\n")
@@ -101,5 +101,6 @@ def test_simulate():
 
 
 if __name__ == "__main__":
-    test_simulate()
+    print("Starting test simulator ...")
+    run()
 
