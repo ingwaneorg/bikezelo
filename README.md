@@ -23,7 +23,7 @@ cd bikezelo
 
 ### Step 2: Install dependencies:
 
-*Optional: Create and activate a virtual environment ~ we will skip this part
+*Optional: Create and activate a virtual environment ~ we will skip this part*
 
 ```bash
 pip install -r requirements.txt
