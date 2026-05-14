@@ -1,3 +1,12 @@
+"""
+Flask dashboard for the bikezelo pipeline monitor.
+
+Serves two JSON endpoints polled by the browser:
+  /data/rows     — returns new rows since last poll (every 3 s); rows arrive unvalidated (white)
+  /data/validate — runs Great Expectations against the full DB (every 10 s); returns row colours + stats
+
+rules.py is hot-reloaded each validation cycle so students can edit rules without restarting the app.
+"""
 from flask import Flask, render_template, jsonify, request
 import pandas as pd
 import great_expectations as gx

@@ -1,3 +1,12 @@
+"""
+Live order simulator for the bikezelo pipeline monitor.
+
+Writes one row every 2 seconds to data/orders.db. Roughly 1 in 8 rows is intentionally bad
+(null customer, negative amount, invalid status, or malformed timestamp). An occasional incident
+spike fires a burst of 4-8 consecutive bad rows to simulate a real pipeline outage.
+
+DB is capped at 500 rows — older rows are deleted on each insert.
+"""
 import sqlite3
 import os
 import time
