@@ -201,15 +201,13 @@ def get_rows():
     Called every 3 seconds. Rows return as white (unvalidated).
     """
     last_row_id = int(request.args.get("after", 0))
-    is_first_load = last_row_id == 0
 
     df = read_db()
     if df.empty:
         return jsonify({"rows": [], "max_row_id": 0})
 
     new_rows = df[df["row_id"] > last_row_id]
-    limit = 10 if is_first_load else TICKER_ROWS
-    new_rows = new_rows.tail(limit)
+    new_rows = new_rows.tail(TICKER_ROWS)
 
     max_row_id = int(df["row_id"].max())
 

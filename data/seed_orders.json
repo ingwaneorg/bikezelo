@@ -1,0 +1,381 @@
+[
+  {
+    "order_id": "ORD-0001",
+    "timestamp": "2026-03-05T08:02:14",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST1042", "name": "Aisha Bello", "region": "London" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 },
+      { "sku": "SKU-1044", "qty": 2, "unit_price": 24.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0002",
+    "timestamp": "2026-03-05T08:07:41",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST3310", "name": "Tom Fletcher", "region": "South East" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 1, "unit_price": 89.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0003",
+    "timestamp": "2026-03-05T08:13:09",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST7781", "name": "Priya Nair", "region": "North West" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 },
+      { "sku": "SKU-3050", "qty": 1, "unit_price": 12.99 },
+      { "sku": "SKU-3051", "qty": 3, "unit_price": 4.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0004",
+    "timestamp": "2026-03-05T08:19:55",
+    "status": "REFUNDED",
+    "customer": { "customer_id": "CUST5529", "name": "James Okoro", "region": "Scotland" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 1, "unit_price": 45.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0005",
+    "timestamp": "2026-03-05T08:24:38",
+    "status": "PAID",
+    "customer": { "customer_id": null, "name": "Unknown", "region": "Wales" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 2, "unit_price": 89.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0006",
+    "timestamp": "2026-03-05T08:31:02",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST6614", "name": "Grace Adeyemi", "region": "Yorkshire" },
+    "items": [
+      { "sku": "SKU-1120", "qty": 1, "unit_price": 349.99 },
+      { "sku": "SKU-1044", "qty": 1, "unit_price": 24.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0007",
+    "timestamp": "2026-03-05T08:36:47",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST2093", "name": "Daniel Wright", "region": "South West" },
+    "items": [
+      { "sku": "SKU-3050", "qty": 4, "unit_price": 12.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0008",
+    "timestamp": "2026-03-05T08:42:19",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST8850", "name": "Fatima Khan", "region": "East Midlands" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 2, "unit_price": 45.00 },
+      { "sku": "SKU-3051", "qty": 2, "unit_price": 4.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0009",
+    "timestamp": "2026-03-05T08:48:53",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST1177", "name": "Oliver Hughes", "region": "London" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0010",
+    "timestamp": "2026-03-05T08:55:26",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST4402", "name": "Mei Chen", "region": "South East" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 1, "unit_price": 89.00 },
+      { "sku": "SKU-3050", "qty": 1, "unit_price": 12.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0011",
+    "timestamp": "2026-03-05T09:01:44",
+    "status": "PENDING",
+    "customer": { "customer_id": "CUST9938", "name": "Samuel Idris", "region": "North West" },
+    "items": [
+      { "sku": "SKU-1120", "qty": 1, "unit_price": 349.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0012",
+    "timestamp": "2026-03-05T09:08:12",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST2261", "name": "Hannah Scott", "region": "Scotland" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 1, "unit_price": 45.00 },
+      { "sku": "SKU-1044", "qty": 3, "unit_price": 24.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0013",
+    "timestamp": "2026-03-05T09:14:37",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST3720", "name": "Ravi Patel", "region": "Wales" },
+    "items": [
+      { "sku": "SKU-3050", "qty": 2, "unit_price": 12.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0014",
+    "timestamp": "2026-03-05T09:21:05",
+    "status": "REFUNDED",
+    "customer": { "customer_id": "CUST5140", "name": "Chloe Bennett", "region": "Yorkshire" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 1, "unit_price": 89.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0015",
+    "timestamp": "2026-03-05T09:27:58",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST6803", "name": "Kwame Mensah", "region": "South West" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 },
+      { "sku": "SKU-3051", "qty": 4, "unit_price": 4.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0016",
+    "timestamp": "2026-03-05T09:34:22",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST7025", "name": "Laura Dixon", "region": "East Midlands" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 1, "unit_price": 45.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0017",
+    "timestamp": "2026-03-05T09:40:49",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST8411", "name": "Ben Carter", "region": "London" },
+    "items": [
+      { "sku": "SKU-1120", "qty": 1, "unit_price": 349.99 },
+      { "sku": "SKU-9999", "qty": 1, "unit_price": -420.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0018",
+    "timestamp": "2026-03-05T09:47:15",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST1596", "name": "Nadia Rahman", "region": "South East" },
+    "items": [
+      { "sku": "SKU-3050", "qty": 1, "unit_price": 12.99 },
+      { "sku": "SKU-1044", "qty": 2, "unit_price": 24.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0019",
+    "timestamp": "2026-03-05T09:53:41",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST2748", "name": "George Ellis", "region": "North West" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 3, "unit_price": 89.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0020",
+    "timestamp": "2026-03-05T10:00:07",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST3982", "name": "Yasmin Ali", "region": "Scotland" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 },
+      { "sku": "SKU-3051", "qty": 2, "unit_price": 4.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0021",
+    "timestamp": "2026-03-05T10:06:33",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST5017", "name": "Michael Osei", "region": "Wales" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 2, "unit_price": 45.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0022",
+    "timestamp": "2026-03-05T10:13:00",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST6249", "name": "Sophie Turner", "region": "Yorkshire" },
+    "items": [
+      { "sku": "SKU-3050", "qty": 3, "unit_price": 12.99 },
+      { "sku": "SKU-1044", "qty": 1, "unit_price": 24.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0023",
+    "timestamp": "2026-03-05T10:19:28",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST7530", "name": "Isaac Brown", "region": "South West" },
+    "items": [
+      { "sku": "SKU-8000", "qty": 1, "unit_price": 1499.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0024",
+    "timestamp": "2026-03-05T10:25:54",
+    "status": "REFUNDED",
+    "customer": { "customer_id": "CUST8862", "name": "Amara Nwosu", "region": "East Midlands" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 1, "unit_price": 89.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0025",
+    "timestamp": "2026-03-05T10:32:19",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST1408", "name": "Ella Morgan", "region": "London" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 },
+      { "sku": "SKU-3050", "qty": 2, "unit_price": 12.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0026",
+    "timestamp": "2026-03-05T10:38:46",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST2651", "name": "Hassan Farah", "region": "South East" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 1, "unit_price": 45.00 },
+      { "sku": "SKU-3051", "qty": 5, "unit_price": 4.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0027",
+    "timestamp": "2026-03-05T10:45:11",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST3903", "name": "Lucy Palmer", "region": "North West" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 2, "unit_price": 89.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0028",
+    "timestamp": "2026-03-05T10:51:38",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST5144", "name": "Femi Balogun", "region": "Scotland" },
+    "items": [
+      { "sku": "SKU-1120", "qty": 1, "unit_price": 349.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0029",
+    "timestamp": "05/03/2026 10:58",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST6377", "name": "Zara Sheikh", "region": "Wales" },
+    "items": [
+      { "sku": "SKU-3050", "qty": 1, "unit_price": 12.99 },
+      { "sku": "SKU-1044", "qty": 1, "unit_price": 24.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0030",
+    "timestamp": "2026-03-05T11:05:04",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST7620", "name": "Adam Reid", "region": "Yorkshire" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0031",
+    "timestamp": "2026-03-05T11:11:31",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST8933", "name": "Bisi Ogun", "region": "South West" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 3, "unit_price": 45.00 },
+      { "sku": "SKU-3051", "qty": 2, "unit_price": 4.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0032",
+    "timestamp": "2026-03-05T11:17:57",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST1265", "name": "Katie Shaw", "region": "East Midlands" },
+    "items": [
+      { "sku": "SKU-3050", "qty": 2, "unit_price": 12.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0033",
+    "timestamp": "2026-03-05T11:24:23",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST2578", "name": "Ibrahim Sesay", "region": "London" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 1, "unit_price": 89.00 },
+      { "sku": "SKU-1044", "qty": 2, "unit_price": 24.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0034",
+    "timestamp": "2026-03-05T11:30:50",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST3841", "name": "Rebecca Lloyd", "region": "South East" },
+    "items": []
+  },
+  {
+    "order_id": "ORD-0035",
+    "timestamp": "2026-03-05T11:37:16",
+    "status": "SHIPPED",
+    "customer": { "customer_id": "CUST5194", "name": "Chidi Eze", "region": "North West" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 },
+      { "sku": "SKU-3050", "qty": 1, "unit_price": 12.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0036",
+    "timestamp": "2026-03-05T11:43:42",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST6407", "name": "Megan Price", "region": "Scotland" },
+    "items": [
+      { "sku": "SKU-4400", "qty": 1, "unit_price": 45.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0037",
+    "timestamp": "2026-03-05T11:50:09",
+    "status": "REFUNDED",
+    "customer": { "customer_id": "CUST7710", "name": "Sunita Desai", "region": "Wales" },
+    "items": [
+      { "sku": "SKU-2210", "qty": 1, "unit_price": 89.00 }
+    ]
+  },
+  {
+    "order_id": "ORD-0038",
+    "timestamp": "2026-03-05T11:56:35",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST00000000112233", "name": "Corrupt Record", "region": "Yorkshire" },
+    "items": [
+      { "sku": "SKU-1120", "qty": 1, "unit_price": 349.99 }
+    ]
+  },
+  {
+    "order_id": "ORD-0039",
+    "timestamp": "2026-03-05T12:03:01",
+    "status": "NEW",
+    "customer": { "customer_id": "CUST8256", "name": "Joshua King", "region": "South West" },
+    "items": [
+      { "sku": "SKU-3050", "qty": 3, "unit_price": 12.99 },
+      { "sku": "SKU-3051", "qty": 2, "unit_price": 4.50 }
+    ]
+  },
+  {
+    "order_id": "ORD-0040",
+    "timestamp": "2026-03-05T12:09:27",
+    "status": "PAID",
+    "customer": { "customer_id": "CUST9573", "name": "Halima Yusuf", "region": "East Midlands" },
+    "items": [
+      { "sku": "SKU-1001", "qty": 1, "unit_price": 199.99 },
+      { "sku": "SKU-1044", "qty": 1, "unit_price": 24.50 }
+    ]
+  }
+]
+
