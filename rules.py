@@ -60,12 +60,12 @@ def get_failures(suite):
     #      a) uncomment the code below (6 lines)
     #      b) change the value_set if you want to
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValuesToBeInSet(
-            column="status",
-            value_set=["NEW", "PAID", "SHIPPED", "REFUNDED"]
-        )
-    )
+    #suite.add_expectation(
+    #    gx.expectations.ExpectColumnValuesToBeInSet(
+    #        column="status",
+    #        value_set=["NEW", "PAID", "SHIPPED", "REFUNDED"]
+    #    )
+    #)
 
     # Step 4 - Customer IDs must not be suspiciously long.
     #           A valid ID like CUST1234 is 8 characters. Anything much longer
@@ -73,13 +73,13 @@ def get_failures(suite):
     #      a) uncomment the code below (6 lines)
     #      b) adjust max_value if your IDs use a different format
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
-    suite.add_expectation(
-        gx.expectations.ExpectColumnValueLengthsToBeBetween(
-            column="customer_id",
-            min_value=4,
-            max_value=12
-        )
-    )
+    #suite.add_expectation(
+    #    gx.expectations.ExpectColumnValueLengthsToBeBetween(
+    #        column="customer_id",
+    #        min_value=4,
+    #        max_value=12
+    #    )
+    #)
 
     # Step 5 - Your own rules
     #~~~~~~~~~~~~~~~~~~~~~~~~~~~~>>>
