@@ -283,6 +283,10 @@
         <span class="forecast-value" id="forecast-hour">- / hr</span>
       </div>
       <div class="stat-row">
+        <span class="stat-label">Warnings / hr</span>
+        <span class="forecast-value" id="forecast-warnings">-</span>
+      </div>
+      <div class="stat-row">
         <span class="stat-label">Errors / hr</span>
         <span class="forecast-value" id="forecast-errors">-</span>
       </div>
@@ -310,7 +314,7 @@
   const MAX_TICKER_ROWS = 50;
 
   // --- Monitoring thresholds (adjust to match your pipeline) ---------------
-  const SLA_TARGET = 12;          // % — error rate above this is an SLA breach
+  const SLA_TARGET = {{ sla_target }};  // % - error rate above this is an SLA breach; set server-side in app.py
   document.getElementById('sla-label').textContent = `SLA (<${SLA_TARGET}%)`;
   const INCIDENT_THRESHOLD = 15; // % — error rate above this triggers an incident alert
   document.getElementById('incident-threshold').textContent = `${INCIDENT_THRESHOLD}%`;
@@ -475,6 +479,12 @@
           : 0;
         document.getElementById('forecast-errors').textContent =
           `~${Math.round(errorRate)} / hr`;
+
+        const warningRate = s.total > 0
+          ? (s.warnings / s.total) * f.forecast_per_hour
+          : 0;
+        document.getElementById('forecast-warnings').textContent =
+          `~${Math.round(warningRate)} / hr`;
 
         const validationStatusEl = document.getElementById('validation-status');
         if (data.rules_error) {

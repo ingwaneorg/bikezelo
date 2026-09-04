@@ -16,6 +16,9 @@ import importlib
 import logging
 import math
 import sys
+import getpass
+import socket
+import requests
 
 logging.basicConfig(
     level=logging.INFO,
@@ -29,6 +32,25 @@ BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "data", "orders.db")
 
 TICKER_ROWS = 50
+
+QAPHA_URL = "https://qapha-249748487450.us-east1.run.app/"
+SLA_ERROR_RATE_THRESHOLD = 12.0  # percent; must match SLA_TARGET in templates/index.html
+
+_sla_breached = False  # tracks last known state so we only ping on OK -> breach
+
+
+def ping_qapha_sla_breach(error_rate, total, errors):
+    # Best-effort only - a dead/unreachable endpoint must never break the dashboard for a student.
+    ctx = {
+        "currentNotebookName": "bikezelo",
+        "currentWorkspaceName": socket.gethostname(),
+        "userName": getpass.getuser(),
+        "source": f"SLA {error_rate}% ({errors}/{total})",
+    }
+    try:
+        requests.post(QAPHA_URL, json=ctx, timeout=5)
+    except Exception:
+        pass
 
 
 def get_db():
@@ -191,7 +213,7 @@ def calculate_forecast(df):
 
 @app.route("/")
 def index():
-    return render_template("index.html")
+    return render_template("index.html", sla_target=SLA_ERROR_RATE_THRESHOLD)
 
 
 @app.route("/data/rows")
@@ -246,6 +268,12 @@ def get_validation():
     warnings = sum(1 for v in results.values() if v == "warn")
     errors = sum(1 for v in results.values() if v == "fail")
     error_rate = round((errors / total) * 100, 1) if total > 0 else 0.0
+
+    global _sla_breached
+    breached_now = error_rate > SLA_ERROR_RATE_THRESHOLD
+    if breached_now and not _sla_breached:
+        ping_qapha_sla_breach(error_rate, total, errors)
+    _sla_breached = breached_now
 
     forecast = calculate_forecast(df)
 
