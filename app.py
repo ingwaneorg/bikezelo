@@ -16,9 +16,8 @@ import importlib
 import logging
 import math
 import sys
-import getpass
-import socket
-import requests
+
+from qapha_ping import ping_qapha, vm_name
 
 logging.basicConfig(
     level=logging.INFO,
@@ -33,24 +32,14 @@ DB_PATH = os.path.join(BASE_DIR, "data", "orders.db")
 
 TICKER_ROWS = 50
 
-QAPHA_URL = "https://qapha-249748487450.us-east1.run.app/"
+VM_NAME = vm_name()  # shown in the header so a learner can tell the tutor which qapha row is theirs
 SLA_ERROR_RATE_THRESHOLD = 12.0  # percent; must match SLA_TARGET in templates/index.html
 
 _sla_breached = False  # tracks last known state so we only ping on OK -> breach
 
 
 def ping_qapha_sla_breach(error_rate, total, errors):
-    # Best-effort only - a dead/unreachable endpoint must never break the dashboard for a student.
-    ctx = {
-        "currentNotebookName": "bikezelo",
-        "currentWorkspaceName": socket.gethostname(),
-        "userName": getpass.getuser(),
-        "source": f"SLA {error_rate}% ({errors}/{total})",
-    }
-    try:
-        requests.post(QAPHA_URL, json=ctx, timeout=5)
-    except Exception:
-        pass
+    ping_qapha(f"SLA {error_rate}% ({errors}/{total})")
 
 
 def get_db():
@@ -213,7 +202,7 @@ def calculate_forecast(df):
 
 @app.route("/")
 def index():
-    return render_template("index.html", sla_target=SLA_ERROR_RATE_THRESHOLD)
+    return render_template("index.html", sla_target=SLA_ERROR_RATE_THRESHOLD, vm_name=VM_NAME)
 
 
 @app.route("/data/rows")
@@ -292,4 +281,8 @@ def get_validation():
 
 
 if __name__ == "__main__":
+    # debug=True re-runs this block in a reloader child on every save of rules.py;
+    # WERKZEUG_RUN_MAIN is only set in that child, so this pings once per launch
+    if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
+        ping_qapha("bikezelo-start")
     app.run(host='0.0.0.0', port=5000, debug=True)

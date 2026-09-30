@@ -3,6 +3,7 @@
 *.csv
 data/orders.db*
 data/orders.csv
+data/vm_id.txt
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

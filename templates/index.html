@@ -35,6 +35,12 @@
       color: #ffffff;
     }
 
+    #vm-name {
+      font-size: 0.9em;
+      color: #00aaff;
+      margin-right: 20px;
+    }
+
     .main {
       display: flex;
       flex: 1;
@@ -203,7 +209,7 @@
 
 <header>
   <h1>⚡ BIKEZELO ~ TechMart Pipeline Monitor</h1>
-  <span id="clock">--:--:--</span>
+  <span><span id="vm-name">VM: {{ vm_name }}</span><span id="clock">--:--:--</span></span>
 </header>
 
 <div id="incident-banner">
