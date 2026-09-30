@@ -16,6 +16,7 @@ import importlib
 import logging
 import math
 import sys
+import threading
 
 from qapha_ping import ping_qapha, vm_name
 
@@ -281,8 +282,10 @@ def get_validation():
 
 
 if __name__ == "__main__":
-    # debug=True re-runs this block in a reloader child on every save of rules.py;
-    # WERKZEUG_RUN_MAIN is only set in that child, so this pings once per launch
-    if os.environ.get("WERKZEUG_RUN_MAIN") != "true":
-        ping_qapha("bikezelo-start")
+    # debug=True re-runs this block in a reloader child, once at launch and again on
+    # every save of rules.py. WERKZEUG_RUN_MAIN is only set in that child, so the
+    # parent pings once per launch and the child once per save - letting the tutor
+    # see who is working. Threaded so a slow qapha never delays the restart.
+    source = "bikezelo-save" if os.environ.get("WERKZEUG_RUN_MAIN") == "true" else "bikezelo-start"
+    threading.Thread(target=ping_qapha, args=(source,), daemon=True).start()
     app.run(host='0.0.0.0', port=5000, debug=True)
