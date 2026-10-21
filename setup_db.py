@@ -1,8 +1,6 @@
 import sqlite3
 import os
 
-from qapha_ping import ping_qapha
-
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 DB_PATH = os.path.join(BASE_DIR, "data", "orders.db")
 
@@ -33,8 +31,6 @@ def setup():
     conn.commit()
     conn.close()
     print(f"Database created: {DB_PATH}")
-
-    ping_qapha("bikezelo-setup")
 
 if __name__ == "__main__":
     setup()

@@ -16,9 +16,6 @@ import importlib
 import logging
 import math
 import sys
-import threading
-
-from qapha_ping import ping_qapha, vm_name
 
 logging.basicConfig(
     level=logging.INFO,
@@ -33,14 +30,7 @@ DB_PATH = os.path.join(BASE_DIR, "data", "orders.db")
 
 TICKER_ROWS = 50
 
-VM_NAME = vm_name()  # shown in the header so a learner can tell the tutor which qapha row is theirs
 SLA_ERROR_RATE_THRESHOLD = 12.0  # percent; must match SLA_TARGET in templates/index.html
-
-_sla_breached = False  # tracks last known state so we only ping on OK -> breach
-
-
-def ping_qapha_sla_breach(error_rate, total, errors):
-    ping_qapha(f"SLA {error_rate}% ({errors}/{total})")
 
 
 def get_db():
@@ -203,7 +193,7 @@ def calculate_forecast(df):
 
 @app.route("/")
 def index():
-    return render_template("index.html", sla_target=SLA_ERROR_RATE_THRESHOLD, vm_name=VM_NAME)
+    return render_template("index.html", sla_target=SLA_ERROR_RATE_THRESHOLD)
 
 
 @app.route("/data/rows")
@@ -259,12 +249,6 @@ def get_validation():
     errors = sum(1 for v in results.values() if v == "fail")
     error_rate = round((errors / total) * 100, 1) if total > 0 else 0.0
 
-    global _sla_breached
-    breached_now = error_rate > SLA_ERROR_RATE_THRESHOLD
-    if breached_now and not _sla_breached:
-        ping_qapha_sla_breach(error_rate, total, errors)
-    _sla_breached = breached_now
-
     forecast = calculate_forecast(df)
 
     return jsonify({
@@ -282,10 +266,4 @@ def get_validation():
 
 
 if __name__ == "__main__":
-    # debug=True re-runs this block in a reloader child, once at launch and again on
-    # every save of rules.py. WERKZEUG_RUN_MAIN is only set in that child, so the
-    # parent pings once per launch and the child once per save - letting the tutor
-    # see who is working. Threaded so a slow qapha never delays the restart.
-    source = "bikezelo-save" if os.environ.get("WERKZEUG_RUN_MAIN") == "true" else "bikezelo-start"
-    threading.Thread(target=ping_qapha, args=(source,), daemon=True).start()
     app.run(host='0.0.0.0', port=5000, debug=True)
